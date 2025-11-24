@@ -60,14 +60,14 @@ def init_db():
     if c.fetchone()[0] == 0:
         defaults = {
             'Housing': ['rent', 'mortgage', 'property', 'tax', 'home', 'insurance', 'hoa', 'plumbing', 'electrician', 'repair', 'furniture', 'ikea', 'depot'],
-            'Transportation': ['uber', 'car', 'lyft', 'taxi', 'bus', 'subway', 'amtrak', 'train', 'fuel', 'gasoline', 'payment', 'insurance', 'parking', 'wash', 'auto', 'repair', 'dmv', 'bolt'],
+            'Transportation': ['transportation','uber', 'car', 'lyft', 'taxi', 'bus', 'subway', 'amtrak', 'train', 'fuel', 'gasoline', 'payment', 'insurance', 'parking', 'wash', 'auto', 'repair', 'dmv', 'bolt'],
             'Groceries & Household': ['grocery', 'groceries', 'market', 'safeway', 'kroger', 'walmart', 'costco', 'sprouts', 'trader', 'joe', 'publix', 'food', 'supermarket', 'target', 'whole', 'foods', 'household', 'supplies', 'toilet', 'paper', 'soap', 'detergent'],
-            'Dining': ['restaurant', 'cafe', 'coffee', 'snaks', 'starbucks', 'doordash', 'grubhub', 'ubereats', 'delivery', 'mcdonalds', 'burger', 'king', 'pizza', 'hut', 'dominos', 'chipotle', 'eats', 'eating', 'out'],
-            'Entertainment': ['movie', 'cinema', 'concert', 'spotify', 'netflix', 'hulu', 'disney', 'app', 'store', 'google', 'play', 'tickets', 'bar', 'nightclub', 'apple', 'music', 'youtube', 'premium', 'gaming', 'steam', 'playstation', 'xbox'],
-            'Personal & Family Care': ['haircut', 'shopping' ,'salon', 'barber', 'cosmetics', 'toiletries', 'sephora', 'ulta', 'gym', 'fitness', 'yoga', 'childcare', 'daycare', 'baby', 'pet', 'food', 'vet', 'veterinarian', 'spa', 'massage'],
-            'Work & Education': ['office', 'supplies', 'stationery', 'udemy', 'coursera', 'book', 'textbook', 'tuition', 'school', 'college', 'webinar', 'software', 'adobe', 'slack', 'zoom', 'linkedin', 'learning', 'github'],
-            'Health & Medical': ['doctor', 'dentist', 'hospital', 'pharmacy', 'cvs', 'walgreens', 'rite', 'aid', 'medicine', 'prescription', 'health', 'insurance', 'copay', 'vision', 'therapy', 'physician'],
-            'Travel': ['flight', 'airline', 'american', 'delta', 'united', 'southwest', 'hotel', 'airbnb', 'booking.com', 'expedia', 'vacation', 'trip', 'luggage', 'rental', 'car', 'hertz', 'avis'],
+            'Dining': ['dining','restaurant', 'cafe', 'coffee', 'snaks', 'starbucks', 'doordash', 'grubhub', 'ubereats', 'delivery', 'mcdonalds', 'burger', 'king', 'pizza', 'hut', 'dominos', 'chipotle', 'eats', 'eating', 'out'],
+            'Entertainment': ['entertainment','movie', 'cinema', 'concert', 'spotify', 'netflix', 'hulu', 'disney', 'app', 'store', 'google', 'play', 'tickets', 'bar', 'nightclub', 'apple', 'music', 'youtube', 'premium', 'gaming', 'steam', 'playstation', 'xbox'],
+            'Personal & Family Care': ['personal','haircut', 'shopping' ,'salon', 'barber', 'cosmetics', 'toiletries', 'sephora', 'ulta', 'gym', 'fitness', 'yoga', 'childcare', 'daycare', 'baby', 'pet', 'food', 'vet', 'veterinarian', 'spa', 'massage'],
+            'Work & Education': ['education','office', 'supplies', 'stationery', 'udemy', 'coursera', 'book', 'textbook', 'tuition', 'school', 'college', 'webinar', 'software', 'adobe', 'slack', 'zoom', 'linkedin', 'learning', 'github'],
+            'Health & Medical': ['health','medical','doctor', 'dentist', 'hospital', 'pharmacy', 'cvs', 'walgreens', 'rite', 'aid', 'medicine', 'prescription', 'health', 'insurance', 'copay', 'vision', 'therapy', 'physician'],
+            'Travel': ['travel','flight', 'airline', 'american', 'delta', 'united', 'southwest', 'hotel', 'airbnb', 'booking.com', 'expedia', 'vacation', 'trip', 'luggage', 'rental', 'car', 'hertz', 'avis'],
             'Technology & Communication': ['phone', 'bill', 'verizon', 'at&t', 't-mobile', 'internet', 'comcast', 'xfinity', 'google', 'fi', 'gadget', 'apple', 'samsung', 'best', 'buy', 'newegg', 'aws', 'gcp', 'azure', 'domain'],
             'Financial & Insurance': ['life', 'insurance', 'bank', 'fee', 'atm', 'financial', 'advisor', 'investment', 'stock', 'coinbase', 'robinhood', 'loan', 'payment', 'student', 'credit', 'card', 'transfer'],
             'Business Expenses': ['client', 'dinner', 'business', 'travel', 'consulting', 'legal', 'fee', 'advertising', 'quickbooks', 'adwords'],
@@ -544,4 +544,5 @@ else:
                                 st.dataframe(forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].tail(forecast_days).set_index('ds'))
 
                 except Exception as e: st.error(f"Forecasting error: {e}")
+
             else: st.info("Need >30 days data")
