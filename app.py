@@ -72,8 +72,8 @@ def init_db():
             'Financial & Insurance': ['life', 'insurance', 'bank', 'fee', 'atm', 'financial', 'advisor', 'investment', 'stock', 'coinbase', 'robinhood', 'loan', 'payment', 'student', 'credit', 'card', 'transfer'],
             'Business Expenses': ['client', 'dinner', 'business', 'travel', 'consulting', 'legal', 'fee', 'advertising', 'quickbooks', 'adwords'],
             'Taxes': ['tax', 'return', 'irs', 'property', 'income', 'prep', 'h&r', 'block', 'turbotax'],
-            'Income': ['salary', 'paycheck', 'deposit', 'bonus', 'freelance', 'invoice', 'refund', 'reimbursement', 'interest', 'dividend'],
-            'Other': ['charity', 'donation', 'gift']
+            'Income': ['income','salary', 'paycheck', 'deposit', 'bonus', 'freelance', 'invoice', 'refund', 'reimbursement', 'interest', 'dividend'],
+            'Other': ['other','charity', 'donation', 'gift']
         }
         for cat, keys in defaults.items():
             c.execute("INSERT INTO Categories (category_name, keywords) VALUES (?, ?)", (cat, ",".join(keys)))
@@ -546,3 +546,4 @@ else:
                 except Exception as e: st.error(f"Forecasting error: {e}")
 
             else: st.info("Need >30 days data")
+
