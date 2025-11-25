@@ -256,35 +256,20 @@ Developed by Facebook, Prophet is a powerful and user-friendly forecasting model
 It is robust in handling seasonality and holidays, which are common in expense data.
 It offers a simple API and produces fast, reliable results.
 
-
-## 10.0 Model Evaluation
-The performance of all forecasting models will be rigorously evaluated using standard statistical metrics:
-Mean Absolute Error (MAE): Measures the average magnitude of the errors in a set of predictions, without considering their direction.
-
-$$MAE = \frac{1}{n} \sum_{i=1}^{n} |y_i - \hat{y}_i|$$
-
-Root Mean Square Error (RMSE): The square root of the average of squared differences between prediction and actual observation. It gives a higher weight to large errors. 
-
-$$RMSE = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}$$
-
-Mean Absolute Percentage Error (MAPE): Expresses the accuracy as a percentage of the error. 
-
-$$MAPE = \frac{100\%}{n} \sum_{i=1}^{n} \left| \frac{y_i - \hat{y}_i}{y_i} \right|$$
-
-## 11.0 Application Layer and Features
+## 10.0 Application Layer and Features
 The user-facing application will be a key component, providing an intuitive interface to interact with the AI-powered insights.
 
-### 11.1 Dashboard Overview
+### 10.1 Dashboard Overview
 The main dashboard will provide a comprehensive summary of the user's finances:
 * Visualization of total spending over time.
 * A breakdown of spending distribution by category.
 * An interactive graph displaying future expense forecasts.
 
-### 11.2 Budget Alerts
+### 10.2 Budget Alerts
 The system will send automated alerts via push notifications or emails to warn users. For example: “ You are on track to overshoot your travel budget by 20% this month”.
 
 
-## 12.0 Technology Stack
+## 11.0 Technology Stack
 * **Programming Language:** Python
 * **Web Application Framework:** Streamlit
 * **Database:** SQLite (Local Relational Database)
@@ -298,24 +283,8 @@ The system will send automated alerts via push notifications or emails to warn u
 * **Security:** Hashlib (for SHA-256 password hashing).
 * **Deployment Environment:** Local Execution.
 
-## 13.0 Security and Compliance
+## 12.0 Security and Compliance
 Handling sensitive financial data requires a strong focus on security.
 * All financial data will be encrypted both in transit and at rest.
 * User privacy will be a priority, with strict data handling protocols.
 * The system will be designed with considerations for financial regulations like GDPR.
-
-## 14.0 Future Enhancements
-The project has a clear roadmap for future development:
-* Third-Party Integration: Integrate with popular personal finance apps (like Mint or YNAB) for a more connected experience.
-* AI Chat Assistant: Develop an AI-powered chatbot to provide users with budgeting advice and answer financial questions.
-
-## 15.0 Key Challenges and Best Practices
-### 15.1 Challenges
-* Data Quality: Ensuring the input expense data is clean and consistent is crucial for model accuracy.
-* Model Accuracy: Continuously tuning and validating models to maintain high forecasting accuracy.
-* User Adoption: Designing an intuitive and valuable user experience to encourage consistent use.
-
-### 15.2 Best Practices
-* Interpretability: Keep models as interpretable as possible so users can understand the basis of the forecasts.
-* Iterative Development: Start with simple, effective models (like ARIMA or Prophet) and progressively add complexity (like LSTMs).
-* Usability Focus: The primary focus will be on creating a usable and helpful tool for the end-user.
