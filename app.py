@@ -59,7 +59,7 @@ def init_db():
     c.execute("SELECT count(*) FROM Categories")
     if c.fetchone()[0] == 0:
         defaults = {
-            'Housing': ['rent', 'mortgage', 'property', 'tax', 'home', 'insurance', 'hoa', 'plumbing', 'electrician', 'repair', 'furniture', 'ikea', 'depot'],
+            'Housing': ['Housing','rent', 'mortgage', 'property', 'tax', 'home', 'insurance', 'hoa', 'plumbing', 'electrician', 'repair', 'furniture', 'ikea', 'depot'],
             'Transportation': ['transportation','uber', 'car', 'lyft', 'taxi', 'bus', 'subway', 'amtrak', 'train', 'fuel', 'gasoline', 'payment', 'insurance', 'parking', 'wash', 'auto', 'repair', 'dmv', 'bolt'],
             'Groceries & Household': ['grocery', 'groceries', 'market', 'safeway', 'kroger', 'walmart', 'costco', 'sprouts', 'trader', 'joe', 'publix', 'food', 'supermarket', 'target', 'whole', 'foods', 'household', 'supplies', 'toilet', 'paper', 'soap', 'detergent'],
             'Dining': ['dining','restaurant', 'cafe', 'coffee', 'snaks', 'starbucks', 'doordash', 'grubhub', 'ubereats', 'delivery', 'mcdonalds', 'burger', 'king', 'pizza', 'hut', 'dominos', 'chipotle', 'eats', 'eating', 'out'],
@@ -160,27 +160,50 @@ def get_user_goals(uid):
 def delete_goal_db(goal_id):
     conn = sqlite3.connect(DB_FILE); c = conn.cursor(); c.execute("DELETE FROM Goals WHERE goal_id=?", (goal_id,)); conn.commit(); conn.close()
 
-# PROCESSING
+# PROCESSING (UPDATED FUNCTION TO HANDLE COLUMN NAME MISMATCHES)
 def process_uploaded_data(df_raw, uid, cats):
     df = df_raw.copy()
-    d_col = next((c for c in df.columns if c.lower() == 'date'), None)
-    if not d_col: st.error("Missing 'Date'"); return None
-    df.dropna(subset=[d_col], inplace=True)
-    col_map = {d_col: 'Date'}
+    
+    # Smart column mapping
+    col_map = {}
     for c in df.columns:
-        if c.lower() == 'amount': col_map[c] = 'Amount'
-        if c.lower() == 'description': col_map[c] = 'Description'
-        if c.lower() == 'type': col_map[c] = 'Type'
+        cl = c.lower().strip()
+        if 'date' in cl: col_map[c] = 'Date'
+        elif 'amount' in cl: col_map[c] = 'Amount'
+        elif 'desc' in cl or 'narrat' in cl or 'details' in cl: col_map[c] = 'Description'
+        elif 'type' in cl or 'cr/dr' in cl or 'payment' in cl: col_map[c] = 'Type'
+    
     df.rename(columns=col_map, inplace=True)
+    
+    # Check for required columns
+    if 'Date' not in df.columns or 'Amount' not in df.columns:
+         st.error(f"Could not find 'Date' and 'Amount' columns. Found: {list(df.columns)}")
+         return None
+
+    # Clean Type
+    if 'Type' not in df.columns:
+        df['Type'] = 'Expense'
+    else:
+        df['Type'] = df['Type'].fillna('Unknown').astype(str).str.strip()
+        type_map = {
+            'dr': 'Expense', 'debit': 'Expense', 'exp': 'Expense', 'withdrawal': 'Expense',
+            'cr': 'Income', 'credit': 'Income', 'inc': 'Income', 'deposit': 'Income'
+        }
+        df['Type'] = df['Type'].str.lower().map(type_map).fillna(df['Type'])
+        df['Type'] = df['Type'].apply(lambda x: 'Income' if x.lower() == 'income' else 'Expense')
+
+    # Clean Description
+    if 'Description' not in df.columns: df['Description'] = "Uploaded"
+    df['Description'] = df['Description'].fillna("").astype(str)
+
+    # Parse Date & Amount
     try:
         df['Date'] = pd.to_datetime(df['Date'], dayfirst=True, errors='coerce')
         df.dropna(subset=['Date'], inplace=True)
         df['Amount'] = pd.to_numeric(df['Amount'], errors='coerce').abs()
     except: return None
-    if 'Description' not in df.columns: df['Description'] = "Uploaded"
-    df['Description'] = df['Description'].fillna("").astype(str)
-    if 'Type' not in df.columns: df['Type'] = 'Expense'
     
+    # Categorize
     df['Category'] = df.apply(lambda x: categorize_transaction_nltk(x['Description'], x['Type'], cats), axis=1)
     df['transaction_id'] = [f"{uid}_{time.time()}_{i}" for i in range(len(df))]
     df['user_id'] = uid
@@ -523,7 +546,7 @@ else:
                                 else:
                                     actuals_plot = daily_expenses.set_index('ds').resample('YE')['y'].mean().reset_index().rename(columns={'y': 'Actual'})
                                     t_fmt = '%Y'; lbl = "Actual Yearly"
-
+    
                                 f_data = forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']]
                                 
                                 base = alt.Chart(f_data).encode(x='ds:T')
@@ -544,6 +567,4 @@ else:
                                 st.dataframe(forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].tail(forecast_days).set_index('ds'))
 
                 except Exception as e: st.error(f"Forecasting error: {e}")
-
             else: st.info("Need >30 days data")
-
